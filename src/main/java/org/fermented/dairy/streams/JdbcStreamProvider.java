@@ -40,7 +40,8 @@ public final class JdbcStreamProvider {
                                           final Consumer<Connection> connectionPreCloseAction,
                                           final Consumer<Statement> statementPreCloseAction,
                                           final Consumer<ResultSet> resultSetPreCloseAction) {
-        return StreamSupport.stream(new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, Spliterator.ORDERED) {
+
+        Stream<T> stream = StreamSupport.stream(new Spliterators.AbstractSpliterator<T>(Long.MAX_VALUE, Spliterator.ORDERED) {
                                         @Override
                                         public boolean tryAdvance(Consumer<? super T> consumer) {
                                             try {
@@ -76,6 +77,8 @@ public final class JdbcStreamProvider {
                             }
                         }
                 );
+
+        return Stream.of(stream).flatMap(Function.identity());
     }
 
 
